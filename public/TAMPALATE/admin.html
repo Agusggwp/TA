@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Sistem Informasi Kesehatan Keluarga</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(124, 58, 237, 0.5);
+            }
+        }
+
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
+            min-height: 100vh;
+        }
+
+        .main-content {
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .header {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            padding: 24px 40px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-user span {
+            color: #475569;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+            transition: all 0.3s;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.6);
+        }
+
+        .content {
+            padding: 40px;
+            animation: fadeIn 0.6s ease-out 0.2s backwards;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            padding: 28px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            animation: slideUp 0.6s ease-out 0.3s backwards;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(124, 58, 237, 0.2);
+            box-shadow: 0 12px 32px rgba(124, 58, 237, 0.12);
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(37, 99, 235, 0.02) 100%);
+        }
+
+        .stat-card:hover::before {
+            top: -30%;
+            right: -30%;
+        }
+
+        .stat-card.purple { border-left: 4px solid #7c3aed; }
+        .stat-card.purple .stat-label i { color: #7c3aed; }
+        
+        .stat-card.blue { border-left: 4px solid #2563eb; }
+        .stat-card.blue .stat-label i { color: #2563eb; }
+        
+        .stat-card.green { border-left: 4px solid #10b981; }
+        .stat-card.green .stat-label i { color: #10b981; }
+        
+        .stat-card.orange { border-left: 4px solid #f97316; }
+        .stat-card.orange .stat-label i { color: #f97316; }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-label i {
+            color: #7c3aed;
+            font-size: 16px;
+            transition: color 0.3s;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .card-title iconify-icon,
+        .modal-header iconify-icon {
+            color: #7c3aed;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+
+        .btn i {
+            font-size: 16px;
+            margin-right: 6px;
+        }
+
+        .btn-primary i {
+            color: white;
+        }
+
+        .btn-secondary i {
+            color: #7c3aed;
+        }
+
+        .btn-danger i {
+            color: #dc2626;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-change {
+            font-size: 13px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            animation: slideUp 0.6s ease-out 0.4s backwards;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-shadow: none;
+        }
+
+        .card-title span {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title i {
+            color: #7c3aed;
+            font-size: 22px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+            border-bottom: 2px solid rgba(124, 58, 237, 0.2);
+        }
+
+        th {
+            padding: 16px 18px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 14px;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        td {
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            color: #475569;
+            font-size: 14px;
+        }
+
+        tbody tr {
+            transition: all 0.3s;
+        }
+
+        tbody tr:hover {
+            background: rgba(124, 58, 237, 0.06);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+            color: #92400e;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge-danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+            color: #991b1b;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(124, 58, 237, 0.1);
+            color: #7c3aed;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(124, 58, 237, 0.15);
+            color: #6d28d9;
+            border-color: rgba(124, 58, 237, 0.5);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #b91c1c;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 520px;
+            width: 90%;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(124, 58, 237, 0.15);
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 24px;
+            text-shadow: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-header i {
+            color: #7c3aed;
+            font-size: 28px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #1e293b;
+            transform: rotate(90deg);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            color: #1e293b;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="email"]::placeholder {
+            color: #94a3b8;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            outline: none;
+            border-color: rgba(124, 58, 237, 0.8);
+            background: rgba(124, 58, 237, 0.05);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 16px 20px;
+            }
+
+            .header-title {
+                font-size: 20px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-title" id="page-title">Dashboard</div>
+            <div class="header-user">
+                <span>Admin</span>
+                <div class="user-avatar" onclick="toggleUserMenu()">A</div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- DASHBOARD PAGE -->
+            <div id="dashboard-page" class="page-content">
+                <div class="stats-grid">
+                    <div class="stat-card purple">
+                        <div class="stat-label"><i class="fas fa-arrow-trend-up"></i> Total Pengguna</div>
+                        <div class="stat-value">1,234</div>
+                        <div class="stat-change positive">↑ 12% dari bulan lalu</div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-label"><i class="fas fa-people-roof"></i> Keluarga Aktif</div>
+                        <div class="stat-value">856</div>
+                        <div class="stat-change positive">↑ 8% dari bulan lalu</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-label"><i class="fas fa-heart"></i> Data Kesehatan</div>
+                        <div class="stat-value">5,420</div>
+                        <div class="stat-change positive">↑ 25% dari bulan lalu</div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-label"><i class="fas fa-file"></i> Laporan Dibuat</div>
+                        <div class="stat-value">342</div>
+                        <div class="stat-change positive">↑ 15% dari bulan lalu</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <span><i class="fas fa-wand-magic-sparkles"></i> Pengguna Terbaru</span>
+                        <button class="btn btn-primary" onclick="showModal('addUserModal')">+ Tambah</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>Tipe</th>
+                                    <th>Bergabung</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Budi Santoso</td>
+                                    <td>budi@email.com</td>
+                                    <td>Admin</td>
+                                    <td>2024-01-15</td>
+                                    <td><span class="badge badge-success">Aktif</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Budi Santoso')">Hapus</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Siti Nurhaliza</td>
+                                    <td>siti@email.com</td>
+                                    <td>User</td>
+                                    <td>2024-02-20</td>
+                                    <td><span class="badge badge-success">Aktif</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Siti Nurhaliza')">Hapus</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ahmad Wijaya</td>
+                                    <td>ahmad@email.com</td>
+                                    <td>User</td>
+                                    <td>2024-03-10</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Ahmad Wijaya')">Hapus</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Rina Kusuma</td>
+                                    <td>rina@email.com</td>
+                                    <td>User</td>
+                                    <td>2024-03-25</td>
+                                    <td><span class="badge badge-success">Aktif</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Rina Kusuma')">Hapus</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS PAGE -->
+            <div id="users-page" class="page-content hidden">
+                <div class="card">
+                    <div class="card-title">
+                        <span><i class="fas fa-users"></i> Kelola Pengguna</span>
+                        <button class="btn btn-primary" onclick="showModal('addUserModal')">+ Tambah Pengguna</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Lengkap</th>
+                                    <th>Email</th>
+                                    <th>Tipe Akun</th>
+                                    <th>Tanggal Daftar</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#001</td>
+                                    <td>Budi Santoso</td>
+                                    <td>budi@email.com</td>
+                                    <td>Admin</td>
+                                    <td>2024-01-15</td>
+                                    <td><span class="badge badge-success">Aktif</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Budi Santoso')">Hapus</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#002</td>
+                                    <td>Siti Nurhaliza</td>
+                                    <td>siti@email.com</td>
+                                    <td>User</td>
+                                    <td>2024-02-20</td>
+                                    <td><span class="badge badge-success">Aktif</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Siti Nurhaliza')">Hapus</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#003</td>
+                                    <td>Ahmad Wijaya</td>
+                                    <td>ahmad@email.com</td>
+                                    <td>User</td>
+                                    <td>2024-03-10</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Ahmad Wijaya')">Hapus</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#004</td>
+                                    <td>Rina Kusuma</td>
+                                    <td>rina@email.com</td>
+                                    <td>User</td>
+                                    <td>2024-03-25</td>
+                                    <td><span class="badge badge-success">Aktif</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Rina Kusuma')">Hapus</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#005</td>
+                                    <td>Dewi Lestari</td>
+                                    <td>dewi@email.com</td>
+                                    <td>User</td>
+                                    <td>2024-04-02</td>
+                                    <td><span class="badge badge-danger">Nonaktif</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteUser('Dewi Lestari')">Hapus</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REPORTS PAGE -->
+            <div id="reports-page" class="page-content hidden">
+                <div class="card">
+                    <div class="card-title">
+                        <span><i class="fas fa-chart-column"></i> Laporan Sistem</span>
+                        <button class="btn btn-primary"><i class="fas fa-download"></i> Export</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Tipe Laporan</th>
+                                    <th>Total Data</th>
+                                    <th>Pembuat</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2024-04-08</td>
+                                    <td>Laporan Kesehatan Keluarga</td>
+                                    <td>1,234 data</td>
+                                    <td>Admin</td>
+                                    <td><span class="badge badge-success">Selesai</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Lihat</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2024-04-07</td>
+                                    <td>Statistik Pengguna</td>
+                                    <td>856 user</td>
+                                    <td>Admin</td>
+                                    <td><span class="badge badge-success">Selesai</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Lihat</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2024-04-06</td>
+                                    <td>Pemeriksaan Kesehatan</td>
+                                    <td>5,420 record</td>
+                                    <td>Admin</td>
+                                    <td><span class="badge badge-success">Selesai</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary">Lihat</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS PAGE -->
+            <div id="settings-page" class="page-content hidden">
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-gear"></i> Pengaturan Sistem</div>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-700 text-cyan-300 mb-3">Nama Aplikasi</label>
+                            <input type="text" value="Sistem Informasi Kesehatan Keluarga" class="w-full">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-700 text-cyan-300 mb-3">Email Support</label>
+                            <input type="email" value="support@kesehatan.id" class="w-full">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-700 text-cyan-300 mb-3">Mode Maintenance</label>
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" id="maintenance-mode" class="w-5 h-5">
+                                <label for="maintenance-mode" class="text-cyan-200 cursor-pointer">Aktifkan mode maintenance</label>
+                            </div>
+                        </div>
+                        <div class="pt-6 border-t border-gray-700">
+                            <button class="btn btn-primary"><i class="fas fa-floppy-disk"></i> Simpan Pengaturan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD USER -->
+    <div id="addUserModal" class="modal" onclick="closeModal(this)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(document.getElementById('addUserModal'))">✕</button>
+            <div class="modal-header"><i class="fas fa-wand-magic-sparkles"></i> Tambah Pengguna Baru</div>
+            <form class="space-y-4" onsubmit="handleAddUser(event)">
+                <div>
+                    <label class="block text-sm font-700 text-cyan-300 mb-2">Nama Lengkap</label>
+                    <input type="text" placeholder="Masukkan nama lengkap" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-700 text-cyan-300 mb-2">Email</label>
+                    <input type="email" placeholder="user@email.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-700 text-cyan-300 mb-2">Tipe Akun</label>
+                    <select>
+                        <option>User</option>
+                        <option>Admin</option>
+                    </select>
+                </div>
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal(document.getElementById('addUserModal'))">Batal</button>
+                    <button type="submit" class="btn btn-primary">Tambah Pengguna</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function switchPage(page) {
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            const pageEl = document.getElementById(page + '-page');
+            if (pageEl) {
+                pageEl.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('.sidebar-menu-item').forEach(el => el.classList.remove('active'));
+            event.target.closest('.sidebar-menu-item').classList.add('active');
+
+            const titles = {
+                'dashboard': 'Dashboard',
+                'users': 'Kelola Pengguna',
+                'reports': 'Laporan',
+                'settings': 'Pengaturan'
+            };
+            document.getElementById('page-title').textContent = titles[page] || 'Dashboard';
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(element) {
+            if (element.id) {
+                document.getElementById(element.id).classList.remove('active');
+            } else {
+                element.classList.remove('active');
+            }
+        }
+
+        function handleAddUser(e) {
+            e.preventDefault();
+            alert('✅ Pengguna berhasil ditambahkan!');
+            closeModal(document.getElementById('addUserModal'));
+        }
+
+        function toggleUserMenu() {
+            console.log('User menu clicked');
+        }
+
+        function deleteUser(userName) {
+            Swal.fire({
+                title: 'Hapus Pengguna?',
+                text: `Apakah Anda yakin ingin menghapus pengguna "${userName}"? Aksi ini tidak dapat dibatalkan.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Terhapus!',
+                        text: `Pengguna "${userName}" telah berhasil dihapus.`,
+                        icon: 'success',
+                        confirmButtonColor: '#7c3aed'
+                    });
+                }
+            });
+        }
+
+        function logout() {
+            Swal.fire({
+                title: 'Logout?',
+                text: 'Apakah Anda yakin ingin keluar dari akun ini?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#7c3aed',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth < 768 && !sidebar.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

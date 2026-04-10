@@ -4,111 +4,164 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - Posyandu</title>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
     
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <script src="https://cdn.tailwindcss.com"></script>
-    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+    
+    <!-- Sweet Alert 2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-50">
-    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="w-full max-w-md space-y-8">
-            <!-- Logo / Header -->
-            <div class="text-center">
-                <h2 class="text-3xl font-bold text-gray-900">Posyandu</h2>
-                <p class="mt-2 text-gray-600">Sistem Informasi Posyandu</p>
-            </div>
-
-            <!-- Login Card -->
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h3 class="text-xl font-semibold text-gray-900 mb-6">Masuk ke Akun Anda</h3>
-
-                <!-- Form -->
-                <form class="space-y-6">
-                    <!-- Email/Username Field -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                            Email atau Username
-                        </label>
-                        <input
-                            type="text"
-                            id="email"
-                            name="email"
-                            placeholder="Masukkan email atau username"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                        />
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+        <!-- CONTAINER -->
+        <div class="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden flex">
+            <!-- LEFT SECTION: FORM -->
+            <div class="login-left w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 py-12 bg-white">
+                <div class="w-full max-w-md">
+                    <!-- HEADER -->
+                    <div class="mb-12">
+                        <h1 class="text-5xl font-bold text-gray-900 mb-2 leading-tight">Holla,<br><span class="gradient-text">Welcome Back</span></h1>
+                        <p class="text-gray-600 text-base mt-4 leading-relaxed">Silakan masuk ke akun Anda untuk melanjutkan pengelolaan kesehatan keluarga</p>
                     </div>
 
-                    <!-- Password Field -->
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                            Kata Sandi
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Masukkan kata sandi"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                        />
-                    </div>
+                    <!-- Alert Messages -->
+                    @if ($errors->any())
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Login Gagal!',
+                                html: `
+                                    @foreach ($errors->all() as $error)
+                                        <p>{{ $error }}</p>
+                                    @endforeach
+                                `,
+                                confirmButtonColor: '#0f766e'
+                            });
+                        </script>
+                    @endif
 
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center">
-                            <input
-                                type="checkbox"
+                    @if (session('success'))
+                        <script>
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: '{{ session('success') }}',
+                                timer: 2000,
+                                timerProgressBar: true,
+                                confirmButtonColor: '#0f766e'
+                            });
+                        </script>
+                    @endif
+
+                    <!-- LOGIN FORM -->
+                    <form method="POST" action="{{ route('authenticate') }}" class="space-y-6" onsubmit="handleLogin(event)">
+                        @csrf
+
+                        <!-- EMAIL -->
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input 
+                                type="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                placeholder="masukkan@email.com"
+                                class="form-input @error('email') border-red-500 @enderror"
+                                required
+                            >
+                            @error('email')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- PASSWORD -->
+                        <div class="form-group">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="form-label m-0">Password</label>
+                                <a href="#" class="forgot-link">Lupa Password?</a>
+                            </div>
+                            <input 
+                                type="password"
+                                name="password"
+                                placeholder="••••••••"
+                                class="form-input @error('password') border-red-500 @enderror"
+                                required
+                            >
+                            @error('password')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- REMEMBER ME -->
+                        <div class="checkbox-wrapper">
+                            <input 
+                                type="checkbox" 
+                                id="remember"
                                 name="remember"
-                                class="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer bg-white"
-                            />
-                            <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
-                        </label>
-                        <a href="#" class="text-sm text-blue-600 hover:text-blue-700">
-                            Lupa kata sandi?
-                        </a>
+                                class="w-4 h-4 rounded border-gray-300 text-purple-600 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
+                            >
+                            <label for="remember" class="text-sm text-gray-700">Ingat saya</label>
+                        </div>
+
+                        <!-- SUBMIT BUTTON -->
+                        <button 
+                            type="submit"
+                            class="btn-login w-full py-3 px-4 rounded-lg text-white font-semibold text-lg hover:shadow-lg active:scale-95 transition-all duration-200"
+                        >
+                            Masuk
+                        </button>
+                    </form>
+
+                    <!-- DIVIDER -->
+                    <div class="my-8 flex items-center gap-4">
+                        <div class="flex-1 h-px bg-gray-200"></div>
+                        <span class="text-gray-500 text-sm">atau</span>
+                        <div class="flex-1 h-px bg-gray-200"></div>
                     </div>
 
-                    <!-- Submit Button -->
-                    <button
-                        type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 ease-in-out"
-                    >
-                        Masuk
-                    </button>
-                </form>
-
-                <!-- Divider -->
-                <div class="mt-6 flex items-center">
-                    <div class="flex-1 border-t border-gray-300"></div>
-                    <span class="px-2 text-sm text-gray-500">Atau</span>
-                    <div class="flex-1 border-t border-gray-300"></div>
-                </div>
-
-                <!-- Sign Up Link -->
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-gray-600">
-                        Belum punya akun?
-                        <a href="#" class="text-blue-600 hover:text-blue-700 font-medium">
-                            Daftar sekarang
-                        </a>
+                    <!-- FOOTER -->
+                    <p class="text-center text-gray-600 text-sm">
+                        &copy; 2026 Posyandu. Semua hak dilindungi.
                     </p>
                 </div>
             </div>
 
-            <!-- Footer -->
-            <div class="text-center text-sm text-gray-500">
-                <p>&copy; 2026 Posyandu. Semua hak dilindungi.</p>
+            <!-- RIGHT SECTION: ILLUSTRATION -->
+            <div class="hidden md:flex login-right w-1/2 relative items-center justify-center overflow-hidden">
+                <!-- Background Image -->
+                <img src="{{ asset('TAMPALATE/login.webp') }}" alt="Welcome" class="absolute inset-0 w-full h-full object-cover">
+                
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-900/40 to-blue-900/40"></div>
+
+                <!-- Center Logo/Icon -->
+                <div class="text-center z-10">
+                    <div class="inline-block mb-8">
+                        <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-2xl">
+                            <iconify-icon icon="mdi:hospital-box" style="font-size: 4rem; color: #9333ea;"></iconify-icon>
+                        </div>
+                    </div>
+                    <h2 class="text-white text-4xl font-bold mb-2">Posyandu</h2>
+                    <p class="text-white text-lg opacity-90">Sistem Informasi Kesehatan Keluarga</p>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function handleLogin(event) {
+            Swal.fire({
+                title: 'Memproses Login...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
+</body>
+</html>
+

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Data Kesehatan - Sistem Informasi Kesehatan Keluarga</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(124, 58, 237, 0.5);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes slideForm {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes rotateIcon {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header h1 i {
+            color: white;
+            margin-right: 12px;
+            font-size: 44px;
+        }
+
+        .nav-btn i {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .form-title i {
+            color: #7c3aed;
+            font-size: 36px;
+            margin-right: 12px;
+        }
+
+        .btn i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .history-title i {
+            color: #7c3aed;
+            margin-right: 12px;
+            font-size: 28px;
+        }
+
+        .empty-state-icon i {
+            color: #cbd5e1;
+            font-size: 80px;
+            display: block;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .history-icon i {
+            color: #7c3aed;
+            font-size: 24px;
+        }
+
+        .history-date i {
+            color: #7c3aed;
+            margin-right: 6px;
+            font-size: 14px;
+        }
+
+        .history-details i {
+            color: #7c3aed;
+            margin-right: 6px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+            padding: 50px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(124, 58, 237, 0.4), 0 0 100px rgba(37, 99, 235, 0.2);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -150px;
+            right: -100px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -80px;
+            animation: float 8s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 40px;
+            font-weight: 900;
+            margin: 0;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 15px;
+            margin: 12px 0 0 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(30px) saturate(180%);
+            border-radius: 28px;
+            padding: 50px;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.25), 
+                        0 0 50px rgba(124, 58, 237, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            animation: slideForm 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.8), transparent);
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 36px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 3px solid rgba(124, 58, 237, 0.2);
+            padding-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-title span:first-child {
+            font-size: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 15px;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-label .required {
+            color: #dc2626;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
+            border: 2px solid rgba(124, 58, 237, 0.25);
+            color: #0f172a;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-family: inherit;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-input::placeholder,
+        .form-select::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: rgba(124, 58, 237, 1);
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.02) 0%, rgba(37, 99, 235, 0.02) 100%);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15), inset 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .input-group input {
+            width: 100%;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 36px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(124, 58, 237, 0.15);
+        }
+
+        .btn {
+            padding: 16px 28px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.3s;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.35);
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 16px 50px rgba(124, 58, 237, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn-reset {
+            background: rgba(124, 58, 237, 0.12);
+            color: #7c3aed;
+            border: 2px solid rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-reset:hover {
+            background: rgba(124, 58, 237, 0.18);
+            border-color: rgba(124, 58, 237, 0.6);
+        }
+
+        .history-section {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(30px);
+            border-radius: 28px;
+            padding: 50px;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            animation: slideInUp 0.7s ease-out 0.1s backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        }
+
+        .history-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(124, 58, 237, 0.2);
+            padding-bottom: 16px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .history-item {
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.98) 0%, rgba(241, 245, 249, 0.98) 100%);
+            border: 2px solid rgba(124, 58, 237, 0.2);
+            border-radius: 18px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.1);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .history-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #7c3aed 0%, #2563eb 100%);
+            border-radius: 18px 0 0 18px;
+        }
+
+        .history-item:hover {
+            border-color: rgba(124, 58, 237, 0.5);
+            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.2);
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 100%);
+        }
+
+        .history-icon {
+            font-size: 36px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .history-item:nth-child(2) .history-icon {
+            animation-delay: 0.2s;
+        }
+
+        .history-item:nth-child(3) .history-icon {
+            animation-delay: 0.4s;
+        }
+
+        .history-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-name {
+            font-weight: 900;
+            color: #0f172a;
+            font-size: 18px;
+            letter-spacing: -0.3px;
+        }
+
+        .history-date {
+            font-size: 13px;
+            color: #7c3aed;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .history-details {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.5;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .history-delete {
+            background: rgba(220, 38, 38, 0.15);
+            color: #dc2626;
+            border: 2px solid rgba(220, 38, 38, 0.3);
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .history-delete:hover {
+            background: rgba(220, 38, 38, 0.25);
+            border-color: rgba(220, 38, 38, 0.6);
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .empty-state p {
+            font-size: 17px;
+            margin: 0;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 16px;
+            }
+
+            .form-section,
+            .history-section {
+                padding: 32px 24px;
+                border-radius: 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .history-item {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 20px;
+            }
+
+            .history-item:hover {
+                transform: translateY(-1px);
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .header {
+                padding: 36px 20px;
+            }
+
+            .form-title {
+                font-size: 24px;
+            }
+
+            .history-title {
+                font-size: 22px;
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <h1><i class="fas fa-chart-bar"></i> Input Data Kesehatan Keluarga</h1>
+        <p>Catat data kesehatan anggota keluarga secara berkala</p>
+        <div class="nav-buttons">
+            <a href="link.html" class="nav-btn"><i class="fas fa-arrow-left"></i> Kembali ke Hub</a>
+            <a href="admin.html" class="nav-btn"><i class="fas fa-clipboard"></i> Dashboard</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <!-- INPUT FORM -->
+        <div class="form-section">
+            <div class="form-title">
+                <span><i class="fas fa-pen-to-square"></i></span>
+                <span>Input Data Kesehatan</span>
+            </div>
+
+            <form id="healthForm" onsubmit="handleSubmit(event)">
+                <div class="form-grid">
+                    <!-- Pilih Anggota Keluarga -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Anggota Keluarga <span class="required">*</span>
+                        </label>
+                        <select class="form-select" id="familyMember" required>
+                            <option value="">-- Pilih Anggota Keluarga --</option>
+                            <option value="Budi Santoso (Ayah)">Budi Santoso (Ayah)</option>
+                            <option value="Siti Nurhaliza (Ibu)">Siti Nurhaliza (Ibu)</option>
+                            <option value="Ahmad Wijaya (Anak)">Ahmad Wijaya (Anak)</option>
+                            <option value="Rina Kusuma (Anak)">Rina Kusuma (Anak)</option>
+                        </select>
+                    </div>
+
+                    <!-- Tanggal Pemeriksaan -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Tanggal Pemeriksaan <span class="required">*</span>
+                        </label>
+                        <input type="date" class="form-input" id="checkupDate" required>
+                    </div>
+
+                    <!-- Tekanan Darah -->
+                    <div class="form-group">
+                        <label class="form-label">Tekanan Darah (Sistol/Diastol)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-input" id="systole" placeholder="Sistol (mmHg)" min="0" max="300">
+                            <input type="number" class="form-input" id="diastole" placeholder="Diastol (mmHg)" min="0" max="200">
+                        </div>
+                    </div>
+
+                    <!-- Berat Badan -->
+                    <div class="form-group">
+                        <label class="form-label">Berat Badan</label>
+                        <input type="number" class="form-input" id="weight" placeholder="Berat (kg)" step="0.1" min="0" max="200">
+                    </div>
+
+                    <!-- Tinggi Badan -->
+                    <div class="form-group">
+                        <label class="form-label">Tinggi Badan</label>
+                        <input type="number" class="form-input" id="height" placeholder="Tinggi (cm)" step="0.1" min="0" max="250">
+                    </div>
+
+                    <!-- Kadar Gula Darah -->
+                    <div class="form-group">
+                        <label class="form-label">Kadar Gula Darah</label>
+                        <input type="number" class="form-input" id="bloodSugar" placeholder="Gula darah (mg/dL)" step="0.1" min="0" max="500">
+                    </div>
+
+                    <!-- Denyut Jantung -->
+                    <div class="form-group">
+                        <label class="form-label">Denyut Jantung</label>
+                        <input type="number" class="form-input" id="heartRate" placeholder="Detak jantung (bpm)" min="0" max="250">
+                    </div>
+
+                    <!-- Dokter Pemeriksa -->
+                    <div class="form-group">
+                        <label class="form-label">Dokter Pemeriksa</label>
+                        <input type="text" class="form-input" id="doctor" placeholder="Nama dokter">
+                    </div>
+
+                    <!-- Catatan -->
+                    <div class="form-group full">
+                        <label class="form-label">Catatan / Diagnosis</label>
+                        <textarea class="form-textarea" id="notes" placeholder="Tulis catatan atau diagnosis dari dokter..."></textarea>
+                    </div>
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-submit"><i class="fas fa-floppy-disk"></i> Simpan Data</button>
+                    <button type="reset" class="btn btn-reset"><i class="fas fa-rotate-right"></i> Reset Form</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- HISTORY SECTION -->
+        <div class="history-section">
+            <div class="history-title">
+                <span><i class="fas fa-notes-medical"></i> Riwayat Pemeriksaan</span>
+                <span id="historyCount" style="font-size: 16px; color: #7c3aed; font-weight: 600;"></span>
+            </div>
+
+            <div class="history-list" id="historyList">
+                <div class="empty-state">
+                    <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+                    <p>Belum ada data pemeriksaan. Mulai dengan mengisi form di atas!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set default date to today
+        document.getElementById('checkupDate').valueAsDate = new Date();
+
+        // Load data from localStorage
+        function loadHistory() {
+            const data = JSON.parse(localStorage.getItem('healthData') || '[]');
+            displayHistory(data);
+        }
+
+        // Display history
+        function displayHistory(data) {
+            const historyList = document.getElementById('historyList');
+            const historyCount = document.getElementById('historyCount');
+
+            if (data.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+                        <p>Belum ada data pemeriksaan. Mulai dengan mengisi form di atas!</p>
+                    </div>
+                `;
+                historyCount.textContent = '0 data';
+                return;
+            }
+
+            historyCount.textContent = `${data.length} data`;
+
+            historyList.innerHTML = data.reverse().map((item, index) => `
+                <div class="history-item">
+                    <div class="history-icon"><i class="fas fa-pills"></i></div>
+                    <div class="history-info">
+                        <div class="history-name">${item.familyMember}</div>
+                        <div class="history-date"><i class="fas fa-calendar"></i> ${new Date(item.date).toLocaleDateString('id-ID', { 
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        })}</div>
+                        <div class="history-details">
+                            ${item.systole ? `Tekanan: ${item.systole}/${item.diastole} mmHg` : ''}
+                            ${item.weight ? `• Berat: ${item.weight} kg` : ''}
+                            ${item.bloodSugar ? `• Gula: ${item.bloodSugar} mg/dL` : ''}
+                            ${item.heartRate ? `• Detak: ${item.heartRate} bpm` : ''}
+                            ${item.doctor ? `<br><i class="fas fa-user-doctor"></i> ${item.doctor}` : ''}
+                        </div>
+                    </div>
+                    <button type="button" class="history-delete" onclick="deleteData(${data.length - 1 - index})">Hapus</button>
+                </div>
+            `).join('');
+        }
+
+        // Handle form submit
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const formData = {
+                familyMember: document.getElementById('familyMember').value,
+                date: document.getElementById('checkupDate').value,
+                systole: document.getElementById('systole').value || null,
+                diastole: document.getElementById('diastole').value || null,
+                weight: document.getElementById('weight').value || null,
+                height: document.getElementById('height').value || null,
+                bloodSugar: document.getElementById('bloodSugar').value || null,
+                heartRate: document.getElementById('heartRate').value || null,
+                doctor: document.getElementById('doctor').value || '',
+                notes: document.getElementById('notes').value || ''
+            };
+
+            // Get existing data
+            const data = JSON.parse(localStorage.getItem('healthData') || '[]');
+            data.push(formData);
+            localStorage.setItem('healthData', JSON.stringify(data));
+
+            Swal.fire({
+                title: 'Sukses!',
+                text: `Data kesehatan ${formData.familyMember} telah disimpan.`,
+                icon: 'success',
+                confirmButtonColor: '#7c3aed'
+            });
+
+            // Reset form
+            document.getElementById('healthForm').reset();
+            document.getElementById('checkupDate').valueAsDate = new Date();
+
+            // Reload history
+            loadHistory();
+        }
+
+        // Delete data
+        function deleteData(index) {
+            Swal.fire({
+                title: 'Hapus Data?',
+                text: 'Apakah Anda yakin ingin menghapus data ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const data = JSON.parse(localStorage.getItem('healthData') || '[]');
+                    data.splice(index, 1);
+                    localStorage.setItem('healthData', JSON.stringify(data));
+                    loadHistory();
+
+                    Swal.fire({
+                        title: 'Terhapus!',
+                        text: 'Data telah berhasil dihapus.',
+                        icon: 'success',
+                        confirmButtonColor: '#7c3aed'
+                    });
+                }
+            });
+        }
+
+        // Load history on page load
+        window.addEventListener('load', loadHistory);
+    </script>
+</body>
+</html>
