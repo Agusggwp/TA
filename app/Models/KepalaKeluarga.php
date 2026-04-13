@@ -70,12 +70,48 @@ class KepalaKeluarga extends Model implements MustVerifyEmail
     }
 
     /**
+     * Relasi ke Ibu Hamil
+     */
+    public function ibuHamil()
+    {
+        return $this->hasMany(IbuHamil::class);
+    }
+
+    /**
+     * Relasi ke Nifas (Ibu Postpartum)
+     */
+    public function nifas()
+    {
+        return $this->hasMany(Nifas::class);
+    }
+
+    /**
+     * Relasi ke Balita
+     */
+    public function balita()
+    {
+        return $this->hasMany(Balita::class);
+    }
+
+    /**
+     * Relasi ke Remaja
+     */
+    public function remaja()
+    {
+        return $this->hasMany(Remaja::class);
+    }
+
+    /**
+     * Relasi ke Dewasa
+     */
+    public function dewasa()
+    {
+        return $this->hasMany(Dewasa::class);
+    }
+
+    /**
      * Check if user account is approved
      */
-    public function isApproved()
-    {
-        return $this->status === 'approved';
-    }
 
     /**
      * Check if email is verified

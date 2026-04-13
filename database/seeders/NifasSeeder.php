@@ -1,0 +1,205 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Nifas;
+use App\Models\KepalaKeluarga;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class NifasSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $kepalaKeluarga = KepalaKeluarga::all();
+
+        // Data Nifas 1 - Pemeriksaan pertama
+        Nifas::create([
+            'kepala_keluarga_id' => $kepalaKeluarga->first()->id,
+            'nik' => '3501123456789012',
+            'nama_ibu' => 'Ibu Dewi Lestari',
+            'tanggal_lahir' => '1990-05-15',
+            'umur' => '35',
+            'nama_suami' => 'Budi Santoso',
+            'alamat' => 'Jl. Merdeka No. 123',
+            'no_hp' => '081234567890',
+            'dusun' => 'Dusun 1',
+            'desa' => 'Sukodono',
+            'kecamatan' => 'Sukodono',
+            'tanggal_bersalin' => '2026-01-15',
+            'tempat_bersalin' => 'Puskesmas Sukodono',
+            'anak_ke' => 2,
+            'tinggi_badan_ibu' => 160.5,
+            'waktu_kunjungan' => 'Pagi',
+            'berat_badan' => 65.0,
+            'naik_turun' => 'Turun',
+            'tinggi_badan' => 160.5,
+            'lila' => 28.5,
+            'status_gizi' => 'N',
+            'sistole' => 120,
+            'diastole' => 80,
+            'tekanan_darah_status' => 'N',
+            'batuk' => 'Tidak',
+            'demam' => 'Tidak',
+            'bb_turun' => 'Tidak',
+            'kontak_tbc' => 'Tidak',
+            'vitamin_a' => 'Ya',
+            'menyusui' => 'Ya',
+            'kb' => 'IUD',
+            'edukasi' => 'Pemulihan nifas berjalan baik, ASI lancar',
+            'rujukan' => 'Tidak',
+        ]);
+
+        // Data Nifas 2 - Pemeriksaan pertama
+        Nifas::create([
+            'kepala_keluarga_id' => $kepalaKeluarga->skip(1)->first()->id,
+            'nik' => '3501234567890123',
+            'nama_ibu' => 'Ibu Nur Cahaya',
+            'tanggal_lahir' => '1992-08-20',
+            'umur' => '33',
+            'nama_suami' => 'Ahmad Wijaya',
+            'alamat' => 'Jl. Ahmad Yani No. 45',
+            'no_hp' => '081234567891',
+            'dusun' => 'Dusun 2',
+            'desa' => 'Sukodono',
+            'kecamatan' => 'Sukodono',
+            'tanggal_bersalin' => '2026-02-10',
+            'tempat_bersalin' => 'Puskesmas Sukodono',
+            'anak_ke' => 3,
+            'tinggi_badan_ibu' => 156.0,
+            'waktu_kunjungan' => 'Sore',
+            'berat_badan' => 61.0,
+            'naik_turun' => 'Turun',
+            'tinggi_badan' => 156.0,
+            'lila' => 27.5,
+            'status_gizi' => 'N',
+            'sistole' => 115,
+            'diastole' => 75,
+            'tekanan_darah_status' => 'N',
+            'batuk' => 'Tidak',
+            'demam' => 'Tidak',
+            'bb_turun' => 'Tidak',
+            'kontak_tbc' => 'Tidak',
+            'vitamin_a' => 'Ya',
+            'menyusui' => 'Ya',
+            'kb' => 'Implant',
+            'edukasi' => 'Nifas akhir, siap untuk aktivitas normal',
+            'rujukan' => 'Tidak',
+        ]);
+
+        // Data Nifas 3 - Pemeriksaan pertama
+        Nifas::create([
+            'kepala_keluarga_id' => $kepalaKeluarga->skip(2)->first()->id,
+            'nik' => '3501345678901234',
+            'nama_ibu' => 'Ibu Sinta Kusuma',
+            'tanggal_lahir' => '1995-03-10',
+            'umur' => '30',
+            'nama_suami' => 'Raka Pratama',
+            'alamat' => 'Jl. Diponegoro No. 78',
+            'no_hp' => '081234567892',
+            'dusun' => 'Dusun 1',
+            'desa' => 'Sukodono',
+            'kecamatan' => 'Sukodono',
+            'tanggal_bersalin' => '2026-03-20',
+            'tempat_bersalin' => 'Puskesmas Sukodono',
+            'anak_ke' => 1,
+            'tinggi_badan_ibu' => 162.0,
+            'waktu_kunjungan' => 'Pagi',
+            'berat_badan' => 68.0,
+            'naik_turun' => 'Turun',
+            'tinggi_badan' => 162.0,
+            'lila' => 28.5,
+            'status_gizi' => 'N',
+            'sistole' => 118,
+            'diastole' => 78,
+            'tekanan_darah_status' => 'N',
+            'batuk' => 'Tidak',
+            'demam' => 'Tidak',
+            'bb_turun' => 'Tidak',
+            'kontak_tbc' => 'Tidak',
+            'vitamin_a' => 'Ya',
+            'menyusui' => 'Ya',
+            'kb' => 'Pil',
+            'edukasi' => 'Pemulihan cepat, bayi sehat dan ASI lancar',
+            'rujukan' => 'Tidak',
+        ]);
+
+        // RIWAYAT PEMERIKSAAN - DUPLIKAT DATA (untuk tracking history)
+        // Nifas 1 - Pemeriksaan ke-2 (hari ke-7 nifas)
+        Nifas::create([
+            'kepala_keluarga_id' => $kepalaKeluarga->first()->id,
+            'nik' => '3501123456789012',
+            'nama_ibu' => 'Ibu Dewi Lestari',
+            'tanggal_lahir' => '1990-05-15',
+            'umur' => '35',
+            'nama_suami' => 'Budi Santoso',
+            'alamat' => 'Jl. Merdeka No. 123',
+            'no_hp' => '081234567890',
+            'dusun' => 'Dusun 1',
+            'desa' => 'Sukodono',
+            'kecamatan' => 'Sukodono',
+            'tanggal_bersalin' => '2026-01-15',
+            'tempat_bersalin' => 'Puskesmas Sukodono',
+            'anak_ke' => 2,
+            'tinggi_badan_ibu' => 160.5,
+            'waktu_kunjungan' => 'Pagi',
+            'berat_badan' => 64.0,
+            'naik_turun' => 'Turun',
+            'tinggi_badan' => 160.5,
+            'lila' => 28.2,
+            'status_gizi' => 'N',
+            'sistole' => 118,
+            'diastole' => 78,
+            'tekanan_darah_status' => 'N',
+            'batuk' => 'Tidak',
+            'demam' => 'Tidak',
+            'bb_turun' => 'Tidak',
+            'kontak_tbc' => 'Tidak',
+            'vitamin_a' => 'Ya',
+            'menyusui' => 'Ya',
+            'kb' => 'IUD',
+            'edukasi' => 'Kunjungan nifas hari ke-7, pemulihan lancar, ASI melimpah',
+            'rujukan' => 'Tidak',
+        ]);
+
+        // Nifas 2 - Pemeriksaan ke-2 (hari ke-14 nifas - follow-up)
+        Nifas::create([
+            'kepala_keluarga_id' => $kepalaKeluarga->skip(1)->first()->id,
+            'nik' => '3501234567890123',
+            'nama_ibu' => 'Ibu Nur Cahaya',
+            'tanggal_lahir' => '1992-08-20',
+            'umur' => '33',
+            'nama_suami' => 'Ahmad Wijaya',
+            'alamat' => 'Jl. Ahmad Yani No. 45',
+            'no_hp' => '081234567891',
+            'dusun' => 'Dusun 2',
+            'desa' => 'Sukodono',
+            'kecamatan' => 'Sukodono',
+            'tanggal_bersalin' => '2026-02-10',
+            'tempat_bersalin' => 'Puskesmas Sukodono',
+            'anak_ke' => 3,
+            'tinggi_badan_ibu' => 156.0,
+            'waktu_kunjungan' => 'Sore',
+            'berat_badan' => 60.0,
+            'naik_turun' => 'Turun',
+            'tinggi_badan' => 156.0,
+            'lila' => 27.2,
+            'status_gizi' => 'N',
+            'sistole' => 114,
+            'diastole' => 73,
+            'tekanan_darah_status' => 'N',
+            'batuk' => 'Tidak',
+            'demam' => 'Tidak',
+            'bb_turun' => 'Tidak',
+            'kontak_tbc' => 'Tidak',
+            'vitamin_a' => 'Ya',
+            'menyusui' => 'Ya',
+            'kb' => 'Implant',
+            'edukasi' => 'Follow-up hari ke-14, perdarahan normal, jahitan rapi, bayi aktif',
+            'rujukan' => 'Tidak',
+        ]);
+    }
+}

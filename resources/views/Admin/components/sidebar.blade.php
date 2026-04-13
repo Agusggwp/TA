@@ -17,6 +17,36 @@
             <iconify-icon icon="mdi:home-group" class="w-5 h-5 mr-3" style="font-size: 1.25rem;"></iconify-icon>
             Kepala Keluarga
         </a>
+
+        <!-- Data Kesehatan Submenu -->
+        <div class="px-2 mt-6 mb-4">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Data Kesehatan</span>
+        </div>
+
+        <a href="{{ route('admin.ibu-hamil.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.ibu-hamil.*') ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }} transition">
+            <iconify-icon icon="mdi:mother" class="w-5 h-5 mr-3" style="font-size: 1.25rem;"></iconify-icon>
+            Ibu Hamil
+        </a>
+
+        <a href="{{ route('admin.nifas.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.nifas.*') ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }} transition">
+            <iconify-icon icon="mdi:baby-face" class="w-5 h-5 mr-3" style="font-size: 1.25rem;"></iconify-icon>
+            Nifas (Postpartum)
+        </a>
+
+        <a href="{{ route('admin.balita.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.balita.*') ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }} transition">
+            <iconify-icon icon="mdi:baby-carriage" class="w-5 h-5 mr-3" style="font-size: 1.25rem;"></iconify-icon>
+            Balita (< 5 Tahun)
+        </a>
+
+        <a href="{{ route('admin.remaja.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.remaja.*') ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }} transition">
+            <iconify-icon icon="mdi:account-young" class="w-5 h-5 mr-3" style="font-size: 1.25rem;"></iconify-icon>
+            Remaja (10-19 Tahun)
+        </a>
+
+        <a href="{{ route('admin.dewasa.index') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.dewasa.*') ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }} transition">
+            <iconify-icon icon="mdi:account" class="w-5 h-5 mr-3" style="font-size: 1.25rem;"></iconify-icon>
+            Dewasa (>= 18 Tahun)
+        </a>
     </nav>
 
     <div class="mt-auto pt-6 border-t border-gray-200">

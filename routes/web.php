@@ -5,6 +5,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KepalaKeluargaAuthController;
 use App\Http\Controllers\KepalaKeluargaRegisterController;
 use App\Http\Controllers\KepalaKeluargaController;
+use App\Http\Controllers\IbuHamilController;
+use App\Http\Controllers\NifasController;
+use App\Http\Controllers\BalitaController;
+use App\Http\Controllers\RemajaController;
+use App\Http\Controllers\DewasaController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Routes
@@ -34,6 +39,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/kepala-keluarga/{kepalaKeluarga}/status', [AdminController::class, 'kepalaKeluargaUpdateStatus'])->name('admin.kepala-keluarga.update-status');
     Route::post('/kepala-keluarga/{kepalaKeluarga}/approve', [AdminController::class, 'kepalaKeluargaApprove'])->name('admin.kepala-keluarga.approve');
     Route::post('/kepala-keluarga/{kepalaKeluarga}/reject', [AdminController::class, 'kepalaKeluargaReject'])->name('admin.kepala-keluarga.reject');
+
+    // Health Data Management Routes (5 Resource Controllers)
+    Route::resource('ibu-hamil', IbuHamilController::class, ['as' => 'admin', 'parameters' => ['ibu-hamil' => 'ibu_hamil']]);
+    Route::resource('nifas', NifasController::class, ['as' => 'admin', 'parameters' => ['nifas' => 'nifa']]);
+    Route::resource('balita', BalitaController::class, ['as' => 'admin', 'parameters' => ['balita' => 'balita']]);
+    Route::resource('remaja', RemajaController::class, ['as' => 'admin', 'parameters' => ['remaja' => 'remaja']]);
+    Route::resource('dewasa', DewasaController::class, ['as' => 'admin', 'parameters' => ['dewasa' => 'dewasa']]);
 });
 
 // User Dashboard Route (untuk user regular)
