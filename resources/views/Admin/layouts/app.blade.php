@@ -15,7 +15,7 @@
 </head>
 <body class="bg-gradient-to-br from-slate-100 via-slate-50 to-slate-100">
     <div class="flex">
-        @include('components.sidebar')
+        @include('Admin.components.sidebar')
 
         <!-- Main Content -->
         <main class="main-content flex-1 ml-64">

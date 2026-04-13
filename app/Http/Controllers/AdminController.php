@@ -17,7 +17,7 @@ class AdminController extends Controller
         $kaderUsers = User::where('role', 'kader')->count();
         $bidanUsers = User::where('role', 'bidan')->count();
 
-        return view('admin.dashboard', [
+        return view('Admin.admin.dashboard', [
             'totalUsers' => $totalUsers,
             'adminUsers' => $adminUsers,
             'kaderUsers' => $kaderUsers,
@@ -31,7 +31,7 @@ class AdminController extends Controller
     public function users()
     {
         $users = User::all();
-        return view('admin.users.index', ['users' => $users]);
+        return view('Admin.admin.users.index', ['users' => $users]);
     }
 
     /**
@@ -39,7 +39,7 @@ class AdminController extends Controller
      */
     public function createUser()
     {
-        return view('admin.users.create');
+        return view('Admin.admin.users.create');
     }
 
     /**
@@ -69,7 +69,7 @@ class AdminController extends Controller
      */
     public function editUser(User $user)
     {
-        return view('admin.users.edit', ['user' => $user]);
+        return view('Admin.admin.users.edit', ['user' => $user]);
     }
 
     /**

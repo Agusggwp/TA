@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KepalaKeluargaAuthController;
+use App\Http\Controllers\KepalaKeluargaController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Routes
@@ -30,3 +32,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 Route::get('/dashboard', function () {
     return redirect('/');
 })->middleware('auth')->name('dashboard');
+
+// Kepala Keluarga Routes (Session-based)
+Route::prefix('keluarga')->group(function () {
+    Route::get('/login', [KepalaKeluargaAuthController::class, 'login'])->name('keluarga.login');
+    Route::post('/authenticate', [KepalaKeluargaAuthController::class, 'authenticate'])->name('keluarga.authenticate');
+});
+
+Route::middleware('kepala_keluarga')->prefix('keluarga')->group(function () {
+    Route::get('/dashboard', [KepalaKeluargaController::class, 'dashboard'])->name('keluarga.dashboard');
+    Route::get('/anggota', [KepalaKeluargaController::class, 'anggota'])->name('keluarga.anggota');
+    Route::get('/riwayat', [KepalaKeluargaController::class, 'riwayat'])->name('keluarga.riwayat');
+    Route::post('/logout', [KepalaKeluargaAuthController::class, 'logout'])->name('keluarga.logout');
+});

@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('Admin.layouts.app')
 
-@section('title', 'Tambah Pengguna')
-@section('page_title', 'Tambah Pengguna')
+@section('title', 'Edit Pengguna')
+@section('page_title', 'Edit Pengguna')
 
 @section('content')
 <div class="p-8 max-w-2xl">
@@ -13,10 +13,11 @@
 
     <!-- Form Card -->
     <div class="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Form Tambah Pengguna Baru</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Form Edit Pengguna</h2>
 
-        <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6" onsubmit="handleSubmit(event)">
+        <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-6" onsubmit="handleSubmit(event)">
             @csrf
+            @method('PUT')
 
             <!-- Name -->
             <div>
@@ -24,7 +25,7 @@
                 <input
                     type="text"
                     name="name"
-                    value="{{ old('name') }}"
+                    value="{{ old('name', $user->name) }}"
                     placeholder="Masukkan nama lengkap"
                     class="form-input @error('name') border-red-500 @enderror"
                     required
@@ -40,7 +41,7 @@
                 <input
                     type="email"
                     name="email"
-                    value="{{ old('email') }}"
+                    value="{{ old('email', $user->email) }}"
                     placeholder="masukkan@email.com"
                     class="form-input @error('email') border-red-500 @enderror"
                     required
@@ -48,33 +49,6 @@
                 @error('email')
                     <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                 @enderror
-            </div>
-
-            <!-- Password -->
-            <div>
-                <label class="form-label">Kata Sandi</label>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Minimal 8 karakter"
-                    class="form-input @error('password') border-red-500 @enderror"
-                    required
-                />
-                @error('password')
-                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <!-- Password Confirmation -->
-            <div>
-                <label class="form-label">Konfirmasi Kata Sandi</label>
-                <input
-                    type="password"
-                    name="password_confirmation"
-                    placeholder="Konfirmasi kata sandi"
-                    class="form-input"
-                    required
-                />
             </div>
 
             <!-- Role -->
@@ -85,14 +59,21 @@
                     class="form-input @error('role') border-red-500 @enderror"
                     required
                 >
-                    <option value="">-- Pilih Role --</option>
-                    <option value="admin" @selected(old('role') === 'admin')>Admin</option>
-                    <option value="kader" @selected(old('role') === 'kader')>Kader</option>
-                    <option value="bidan" @selected(old('role') === 'bidan')>Bidan</option>
+                    <option value="admin" @selected(old('role', $user->role) === 'admin')>Admin</option>
+                    <option value="kader" @selected(old('role', $user->role) === 'kader')>Kader</option>
+                    <option value="bidan" @selected(old('role', $user->role) === 'bidan')>Bidan</option>
                 </select>
                 @error('role')
                     <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                 @enderror
+            </div>
+
+            <!-- Info Box -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p class="text-sm text-blue-700 flex items-start gap-2">
+                    <iconify-icon icon="mdi:information" style="font-size: 1.25rem; margin-top: 0.125rem; flex-shrink: 0;"></iconify-icon>
+                    <span><strong>Catatan:</strong> Untuk mengganti kata sandi, silakan hubungi administrator atau gunakan fitur reset password.</span>
+                </p>
             </div>
 
             <!-- Buttons -->
@@ -102,7 +83,7 @@
                     class="btn-login flex-1 py-3 px-4 rounded-lg text-white font-semibold inline-flex items-center justify-center"
                 >
                     <iconify-icon icon="mdi:content-save" style="font-size: 1.25rem; margin-right: 0.5rem;"></iconify-icon>
-                    Simpan Pengguna
+                    Simpan Perubahan
                 </button>
                 <a
                     href="{{ route('admin.users') }}"
@@ -119,32 +100,14 @@
 <script>
     function handleSubmit(event) {
         const form = event.target;
-        let isValid = true;
         
-        // Basic validation check
-        if (!form.name.value || !form.email.value || !form.password.value || !form.role.value) {
-            isValid = false;
-        }
-        
-        if (form.password.value !== form.password_confirmation.value) {
-            isValid = false;
-            Swal.fire({
-                icon: 'error',
-                title: 'Kesalahan!',
-                text: 'Kata sandi dan konfirmasi tidak cocok!'
-            });
-        }
-        
-        if (isValid) {
-            Swal.fire({
-                title: 'Menyimpan...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Menyimpan...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
     }
-}
 </script>
 @endsection

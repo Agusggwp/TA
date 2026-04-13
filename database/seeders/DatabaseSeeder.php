@@ -38,5 +38,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password123'),
             'role' => 'bidan',
         ]);
+
+        // Buat kepala keluarga
+        $this->call(KepalaKeluargaSeeder::class);
     }
 }
