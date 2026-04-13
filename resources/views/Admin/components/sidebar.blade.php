@@ -13,6 +13,10 @@
             <iconify-icon icon="mdi:account-multiple" class="w-5 h-5 mr-3" style="font-size: 1.25rem;"></iconify-icon>
             Kelola Pengguna
         </a>
+        <a href="{{ route('admin.kepala-keluarga') }}" class="flex items-center px-4 py-3 rounded-lg {{ request()->routeIs('admin.kepala-keluarga', 'admin.kepala-keluarga.show') ? 'bg-purple-100 text-purple-700 font-medium' : 'text-gray-700 hover:bg-gray-100' }} transition">
+            <iconify-icon icon="mdi:home-group" class="w-5 h-5 mr-3" style="font-size: 1.25rem;"></iconify-icon>
+            Kepala Keluarga
+        </a>
     </nav>
 
     <div class="mt-auto pt-6 border-t border-gray-200">

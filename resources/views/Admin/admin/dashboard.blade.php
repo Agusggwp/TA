@@ -86,5 +86,24 @@
             </a>
         </div>
     </div>
+
+    <!-- Kepala Keluarga Management Section -->
+    <div class="mt-8 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-8 border border-emerald-200">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+                    <iconify-icon icon="mdi:home-group" style="font-size: 1.75rem; margin-right: 0.5rem; color: #059669;"></iconify-icon>
+                    Manajemen Kepala Keluarga
+                </h2>
+                <p class="text-gray-600 text-sm mt-1">Kelola persetujuan akun kepala keluarga dan verifikasi registrasi</p>
+            </div>
+        </div>
+        <div class="flex gap-4 flex-wrap">
+            <a href="{{ route('admin.kepala-keluarga') }}" class="btn-login inline-flex items-center justify-center px-6 py-3 rounded-lg text-white font-medium hover:shadow-lg transition">
+                <iconify-icon icon="mdi:account-multiple" style="font-size: 1.25rem; margin-right: 0.5rem;"></iconify-icon>
+                Kelola Kepala Keluarga
+            </a>
+        </div>
+    </div>
 </div>
 @endsection

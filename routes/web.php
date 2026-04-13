@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KepalaKeluargaAuthController;
+use App\Http\Controllers\KepalaKeluargaRegisterController;
 use App\Http\Controllers\KepalaKeluargaController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
     Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+
+    // Kepala Keluarga Management Routes
+    Route::get('/kepala-keluarga', [AdminController::class, 'kepalaKeluargaList'])->name('admin.kepala-keluarga');
+    Route::get('/kepala-keluarga/{kepalaKeluarga}', [AdminController::class, 'kepalaKeluargaShow'])->name('admin.kepala-keluarga.show');
+    Route::put('/kepala-keluarga/{kepalaKeluarga}/status', [AdminController::class, 'kepalaKeluargaUpdateStatus'])->name('admin.kepala-keluarga.update-status');
+    Route::post('/kepala-keluarga/{kepalaKeluarga}/approve', [AdminController::class, 'kepalaKeluargaApprove'])->name('admin.kepala-keluarga.approve');
+    Route::post('/kepala-keluarga/{kepalaKeluarga}/reject', [AdminController::class, 'kepalaKeluargaReject'])->name('admin.kepala-keluarga.reject');
 });
 
 // User Dashboard Route (untuk user regular)
@@ -37,6 +45,13 @@ Route::get('/dashboard', function () {
 Route::prefix('keluarga')->group(function () {
     Route::get('/login', [KepalaKeluargaAuthController::class, 'login'])->name('keluarga.login');
     Route::post('/authenticate', [KepalaKeluargaAuthController::class, 'authenticate'])->name('keluarga.authenticate');
+    
+    // Registration Routes
+    Route::get('/register', [KepalaKeluargaRegisterController::class, 'showRegister'])->name('keluarga.register');
+    Route::post('/register', [KepalaKeluargaRegisterController::class, 'store'])->name('keluarga.register-store');
+    Route::get('/register/verification', [KepalaKeluargaRegisterController::class, 'showVerificationPending'])->name('keluarga.register-verification');
+    Route::get('/verify/{id}/{hash}', [KepalaKeluargaRegisterController::class, 'verify'])->name('keluarga.verification.verify');
+    Route::post('/resend-verification', [KepalaKeluargaRegisterController::class, 'resendVerificationEmail'])->name('keluarga.resend-verification');
 });
 
 Route::middleware('kepala_keluarga')->prefix('keluarga')->group(function () {

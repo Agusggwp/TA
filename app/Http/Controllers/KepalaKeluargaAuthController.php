@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KepalaKeluarga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class KepalaKeluargaAuthController extends Controller
@@ -28,21 +29,34 @@ class KepalaKeluargaAuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'no_kk' => 'required|string',
+            'password' => 'required|string|min:8',
         ], [
             'email.required' => 'Email harus diisi',
             'email.email' => 'Format email tidak valid',
-            'no_kk.required' => 'Nomor KK harus diisi',
+            'password.required' => 'Password harus diisi',
+            'password.min' => 'Password minimal 8 karakter',
         ]);
 
-        $kepalaKeluarga = KepalaKeluarga::where('email', $request->email)
-            ->where('no_kk', $request->no_kk)
-            ->first();
+        $kepalaKeluarga = KepalaKeluarga::where('email', $request->email)->first();
 
-        if (!$kepalaKeluarga) {
+        if (!$kepalaKeluarga || !Hash::check($request->password, $kepalaKeluarga->password)) {
             return back()->withErrors([
-                'email' => 'Email atau Nomor KK tidak sesuai dengan data kami.',
-            ]);
+                'email' => 'Email atau password tidak sesuai.',
+            ])->onlyInput('email');
+        }
+
+        // Check if email is verified
+        if (!$kepalaKeluarga->hasVerifiedEmail()) {
+            return back()->with('error_not_verified', [
+                'message' => 'Email belum diverifikasi. Silakan cek email Anda untuk link verifikasi.',
+                'email' => $kepalaKeluarga->email,
+            ])->onlyInput('email');
+        }
+
+        // Check if account is approved by admin
+        if (!$kepalaKeluarga->isApproved()) {
+            return back()->with('error_not_approved', 'Akun Anda masih menunggu persetujuan dari admin. Silakan cek email untuk notifikasi persetujuan.')
+                ->onlyInput('email');
         }
 
         // Simpan ke session
